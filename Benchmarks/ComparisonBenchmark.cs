@@ -14,7 +14,7 @@ namespace Benchmarks
 
         public ComparisonBenchmark()
         {
-            _largeText = File.ReadAllText("C:\\Users\\Dmitry\\source\\repos\\Cryptography\\Benchmarks\\Text example.txt");
+            _largeText = Path.Combine(Directory.GetCurrentDirectory(), "Text examples", "Text example.txt");
         }
 
         [Benchmark]
