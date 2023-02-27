@@ -187,12 +187,13 @@ namespace Cryptography.RotatingGridEncryption
 
         public static void Demo()
         {
+            Console.WriteLine(" Rotating Grid ");
+            Console.WriteLine("Введите текст:");
             var testText = Console.ReadLine();
-
             var encrypted = Encrypt(testText);
-
+            Console.WriteLine("Зашифрованный текст:");
             Console.WriteLine(encrypted.encryptedStr);
-
+            Console.WriteLine("Расшифрованный текст:");
             Console.WriteLine(Decrypt(encrypted.encryptedStr, encrypted.grid));
         }
     }

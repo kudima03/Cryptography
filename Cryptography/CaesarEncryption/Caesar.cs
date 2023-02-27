@@ -64,9 +64,13 @@ namespace Cryptography.CaesarEncryption
 
         public static void Demo()
         {
+            Console.WriteLine(" Caesar ");
             Console.WriteLine("Введите текст:");
             var str = Console.ReadLine();
             var encrypted = Encrypt(str, 10);
+            Console.WriteLine("Зашифрованный текст:");
+            Console.WriteLine(encrypted);
+            Console.WriteLine("Расшифрованный текст:");
             Console.WriteLine(Decrypt(encrypted, 10));
         }
     }

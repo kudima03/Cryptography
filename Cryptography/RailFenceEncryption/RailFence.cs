@@ -146,10 +146,13 @@ namespace Cryptography.RailFenceEncryption
 
         public static void Demo()
         {
+            Console.WriteLine(" Rail Fence ");
             Console.WriteLine("Введите текст:");
             var str = Console.ReadLine();
             var encrypted = Encrypt(str, 10);
+            Console.WriteLine("Зашифрованный текст:");
             Console.WriteLine(encrypted);
+            Console.WriteLine("Расшифрованный  текст:");
             Console.WriteLine(Decrypt(encrypted, 10));
         }
     }

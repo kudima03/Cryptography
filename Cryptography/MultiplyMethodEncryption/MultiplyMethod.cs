@@ -59,10 +59,13 @@
 
         public static void Demo()
         {
+            Console.WriteLine(" Multiply Method ");
             Console.WriteLine("Введите текст:");
             var str = Console.ReadLine();
             var pair = Encrypt(str);
+            Console.WriteLine("Зашифрованный текст:");
             Console.WriteLine(pair.encryptedText);
+            Console.WriteLine("Расшифрованный текст:");
             Console.WriteLine(Decrypt(pair.encryptedText, pair.decryptKey));
         }
     }
