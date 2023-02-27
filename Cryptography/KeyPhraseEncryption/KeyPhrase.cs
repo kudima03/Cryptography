@@ -97,12 +97,15 @@ namespace Cryptography.KeyPhraseEncryption
 
         public static void Demo()
         {
+            Console.WriteLine(" Key Phrase ");
             Console.WriteLine("Введите текст:");
             var str = Console.ReadLine();
             Console.WriteLine("Введите фразу:");
             var phrase = Console.ReadLine();
             var encrypted = Encrypt(str, phrase);
+            Console.WriteLine("Зашифрованный текст:");
             Console.WriteLine(encrypted);
+            Console.WriteLine("Расшифрованный текст:");
             Console.WriteLine(Decrypt(encrypted, phrase));
         }
     }
