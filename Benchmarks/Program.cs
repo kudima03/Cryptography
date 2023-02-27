@@ -7,8 +7,8 @@ internal class Program
     {
         //BenchmarkRunner.Run<RailFenceBenchmark>();
         //BenchmarkRunner.Run<KeyPhraseBenchmark>();
-        BenchmarkRunner.Run<MultiplyMethodBenchmark>();
-        //BenchmarkRunner.Run<ComparisonBenchmark>();
+        //BenchmarkRunner.Run<MultiplyMethodBenchmark>();
+        BenchmarkRunner.Run<ComparisonBenchmark>();
         //BenchmarkRunner.Run<CaesarBenchmark>();
     }
 }

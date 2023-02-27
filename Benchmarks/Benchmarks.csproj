@@ -15,4 +15,10 @@
     <ProjectReference Include="..\Cryptography\Cryptography.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Text examples\Text example.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

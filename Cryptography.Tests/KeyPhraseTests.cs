@@ -13,7 +13,7 @@ namespace Cryptography.Tests
         private readonly string _largeTextExample;
         public KeyPhraseTests()
         {
-            _largeTextExample = File.ReadAllText("C:\\Users\\Dmitry\\source\\repos\\Cryptography\\Benchmarks\\Text example.txt");
+            _largeTextExample = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Text examples", "Text example.txt"));
         }
 
         [TestMethod]

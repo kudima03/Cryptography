@@ -142,5 +142,15 @@ namespace Cryptography.RailFenceEncryption
             }
             return decryptedStr.ToString();
         }
+
+
+        public static void Demo()
+        {
+            Console.WriteLine("Введите текст:");
+            var str = Console.ReadLine();
+            var encrypted = Encrypt(str, 10);
+            Console.WriteLine(encrypted);
+            Console.WriteLine(Decrypt(encrypted, 10));
+        }
     }
 }

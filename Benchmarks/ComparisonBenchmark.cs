@@ -14,7 +14,7 @@ namespace Benchmarks
 
         public ComparisonBenchmark()
         {
-            _largeText = Path.Combine(Directory.GetCurrentDirectory(), "Text examples", "Text example.txt");
+            _largeText = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Text examples", "Text example.txt"));
         }
 
         [Benchmark]

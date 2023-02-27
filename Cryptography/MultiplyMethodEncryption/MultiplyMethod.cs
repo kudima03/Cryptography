@@ -56,5 +56,14 @@
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
         public static string Decrypt(string text, int key) => Chipher(text, key);
+
+        public static void Demo()
+        {
+            Console.WriteLine("Введите текст:");
+            var str = Console.ReadLine();
+            var pair = Encrypt(str);
+            Console.WriteLine(pair.encryptedText);
+            Console.WriteLine(Decrypt(pair.encryptedText, pair.decryptKey));
+        }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cryptography.RotatingGridEncryption;
+﻿using Cryptography.RotatingGridEncryption;
 
 namespace Cryptography.Tests
 {
@@ -15,25 +10,9 @@ namespace Cryptography.Tests
         {
             var testText = "Dimmito mihe quo";
 
-            var matrix = new char[][]
-            {
-                new char[] { '1', ' ', ' ', ' '},
-                new char[] { ' ', ' ', ' ', '2'},
-                new char[] { ' ', ' ', '4', ' '},
-                new char[] { ' ', '3', ' ', ' '},
-            };
+            var encryptedText = RotatingGrid.Encrypt(testText);
 
-            var matrixCopy = new char[][]
-            {
-                new char[] { '1', ' ', ' ', ' '},
-                new char[] { ' ', ' ', ' ', '2'},
-                new char[] { ' ', ' ', '4', ' '},
-                new char[] { ' ', '3', ' ', ' '},
-            };
-
-            var encryptedText = RotatingGrid.Encrypt(testText, matrix);
-
-            var decryptedText = RotatingGrid.Decrypt(encryptedText, matrixCopy);
+            var decryptedText = RotatingGrid.Decrypt(encryptedText.encryptedStr, encryptedText.grid);
 
             Assert.AreEqual(testText, decryptedText);
         }
@@ -41,29 +20,11 @@ namespace Cryptography.Tests
         [TestMethod]
         public void TestEcryptDecryptMatrix5()
         {
-            var testText = "Dimmito mihe quoniam ego ";
+            var testText = "Dimmito mihe quoniam ego";
 
-            var matrix = new char[][]
-            {
-                new char[] { '1', '2', '3', '4', ' '},
-                new char[] { ' ', ' ', '6', '5', ' '},
-                new char[] { ' ', ' ', ' ', ' ', ' '},
-                new char[] { ' ', ' ', ' ', ' ', ' '},
-                new char[] { ' ', ' ', ' ', ' ', ' '},
-            };
+            var encryptedText = RotatingGrid.Encrypt(testText);
 
-            var matrixCopy = new char[][]
-            {
-                new char[] { '1', '2', '3', '4', ' '},
-                new char[] { ' ', ' ', '6', '5', ' '},
-                new char[] { ' ', ' ', ' ', ' ', ' '},
-                new char[] { ' ', ' ', ' ', ' ', ' '},
-                new char[] { ' ', ' ', ' ', ' ', ' '},
-            };
-
-            var encryptedText = RotatingGrid.Encrypt(testText, matrix);
-
-            var decryptedText = RotatingGrid.Decrypt(encryptedText, matrixCopy);
+            var decryptedText = RotatingGrid.Decrypt(encryptedText.encryptedStr, encryptedText.grid);
 
             Assert.AreEqual(testText, decryptedText);
         }
@@ -73,29 +34,9 @@ namespace Cryptography.Tests
         {
             var testText = "Dimmito mihe quoniam ego sum optimus";
 
-            var matrix = new char[][]
-            {
-                new char[] { '1', '2', '3', '4', '5', ' '},
-                new char[] { ' ', ' ', '7', '8', '6', ' '},
-                new char[] { ' ', ' ', ' ', '9', ' ', ' '},
-                new char[] { ' ', ' ', ' ', ' ', ' ', ' '},
-                new char[] { ' ', ' ', ' ', ' ', ' ', ' '},
-                new char[] { ' ', ' ', ' ', ' ', ' ', ' '},
-            };
+            var encryptedText = RotatingGrid.Encrypt(testText);
 
-            var matrixCopy = new char[][]
-            {
-                new char[] { '1', '2', '3', '4', '5', ' '},
-                new char[] { ' ', ' ', '7', '8', '6', ' '},
-                new char[] { ' ', ' ', ' ', '9', ' ', ' '},
-                new char[] { ' ', ' ', ' ', ' ', ' ', ' '},
-                new char[] { ' ', ' ', ' ', ' ', ' ', ' '},
-                new char[] { ' ', ' ', ' ', ' ', ' ', ' '},
-            };
-
-            var encryptedText = RotatingGrid.Encrypt(testText, matrix);
-
-            var decryptedText = RotatingGrid.Decrypt(encryptedText, matrixCopy);
+            var decryptedText = RotatingGrid.Decrypt(encryptedText.encryptedStr, encryptedText.grid);
 
             Assert.AreEqual(testText, decryptedText);
         }
@@ -103,26 +44,13 @@ namespace Cryptography.Tests
         [TestMethod]
         public void TestEncryptNullStringParameter()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => RotatingGrid.Encrypt(null, null));
+            Assert.ThrowsException<ArgumentNullException>(() => RotatingGrid.Encrypt(null));
         }
 
         [TestMethod]
         public void TestDecryptNullStringParameter()
         {
             Assert.ThrowsException<ArgumentNullException>(() => RotatingGrid.Decrypt(null, null));
-        }
-
-        [TestMethod]
-        public void TestInvalidGridParameter()
-        {
-            var matrix = new char[][]
-            {
-                new char[] { '1', ' ', ' ', ' '},
-                new char[] { ' ', ' ', ' ', '2'},
-                new char[] { ' ', '5', '4', ' '},
-                new char[] { ' ', '3', ' ', ' '},
-            };
-            Assert.ThrowsException<ArgumentException>(() => RotatingGrid.Decrypt("asdsadasd", matrix));
         }
     }
 }

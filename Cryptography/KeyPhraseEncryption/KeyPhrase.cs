@@ -93,5 +93,17 @@ namespace Cryptography.KeyPhraseEncryption
         /// <exception cref="ArgumentNullException"></exception>
         /// <returns>Decrypted text according to key.</returns>
         public static string Decrypt(string text, string keyPhrase) => Chipher(text, keyPhrase, false);
+
+
+        public static void Demo()
+        {
+            Console.WriteLine("Введите текст:");
+            var str = Console.ReadLine();
+            Console.WriteLine("Введите фразу:");
+            var phrase = Console.ReadLine();
+            var encrypted = Encrypt(str, phrase);
+            Console.WriteLine(encrypted);
+            Console.WriteLine(Decrypt(encrypted, phrase));
+        }
     }
 }

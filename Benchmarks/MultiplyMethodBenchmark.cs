@@ -10,7 +10,7 @@ namespace Benchmarks
 
         public MultiplyMethodBenchmark()
         {
-            _largeText = Path.Combine(Directory.GetCurrentDirectory(), "Text examples", "Text example.txt");
+            _largeText = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Text examples", "Text example.txt"));
         }
         [Benchmark]
         public void TestMultiplyMethodEncrypt()

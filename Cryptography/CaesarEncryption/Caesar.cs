@@ -60,5 +60,14 @@ namespace Cryptography.CaesarEncryption
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
         public static string Decrypt(string text, int shift) => Chipher(text, shift, false);
+
+
+        public static void Demo()
+        {
+            Console.WriteLine("Введите текст:");
+            var str = Console.ReadLine();
+            var encrypted = Encrypt(str, 10);
+            Console.WriteLine(Decrypt(encrypted, 10));
+        }
     }
 }

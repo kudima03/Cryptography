@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Cryptography.RotatingGridEncryption
 {
@@ -23,7 +19,48 @@ namespace Cryptography.RotatingGridEncryption
             public override bool Equals([NotNullWhen(true)] object? obj)
             {
                 var other = (Coordinate)obj;
-                return X == other.X && Y == other.Y && Value == other.Value;
+                return X == other.X && Y == other.Y;
+            }
+        }
+
+        private static char[][] ChooseAppropriateGrid(string text)
+        {
+            if (text.Length <= 16)
+            {
+                return new char[][]
+                    {
+                        new char[] { '1', ' ', ' ', ' '},
+                        new char[] { ' ', ' ', ' ', '2'},
+                        new char[] { ' ', ' ', '4', ' '},
+                        new char[] { ' ', '3', ' ', ' '},
+                    };
+            }
+            /*            else if (text.Length <= 24)
+                        {
+                            return new char[][]
+                            {
+                                new char[] { '1', '2', '3', '4', ' '},
+                                new char[] { ' ', ' ', '6', '5', ' '},
+                                new char[] { ' ', ' ', '7', ' ', ' '},
+                                new char[] { ' ', ' ', ' ', ' ', ' '},
+                                new char[] { ' ', ' ', ' ', ' ', ' '},
+                            };
+                        }*/
+            else if (text.Length <= 36)
+            {
+                return new char[][]
+                {
+                    new char[] { '1', '2', '3', '4', '5', ' '},
+                    new char[] { ' ', ' ', '7', '8', '6', ' '},
+                    new char[] { ' ', ' ', ' ', '9', ' ', ' '},
+                    new char[] { ' ', ' ', ' ', ' ', ' ', ' '},
+                    new char[] { ' ', ' ', ' ', ' ', ' ', ' '},
+                    new char[] { ' ', ' ', ' ', ' ', ' ', ' '},
+                };
+            }
+            else
+            {
+                throw new ArgumentException("Input text is too large.");
             }
         }
 
@@ -40,23 +77,53 @@ namespace Cryptography.RotatingGridEncryption
                     }
                 }
             }
-            return coordinates.ToArray();
+            return coordinates.OrderBy(x => x.Value).ToArray();
         }
 
-        private static void FillCoordinates(char[][] grid)
+        private static string DecryptMessage(string encryptedStr, char[][] grid)
         {
             var coordinates = GetStartCoordinates(grid);
 
-            foreach (var coordinate in coordinates)
+            var charGrid = new char[grid.Length][];
+
+            for (int i = 0; i < grid.Length; i++)
             {
-                int x = grid.Length - 1 - coordinate.Y;
-                int y = coordinate.X;
+                charGrid[i] = encryptedStr.Substring(i * grid.Length, grid.Length).ToCharArray();
+            }
 
-                for (int i = 0; i < 3; i++)
+            var decryptedStr = new StringBuilder(encryptedStr);
+
+            for (int j = 0; j < coordinates.Length; j++)
+            {
+                int x = coordinates[j].X;
+                int y = coordinates[j].Y;
+
+                for (int i = 0; i < 4; i++)
                 {
-                    if (grid[x][y] != coordinate.Value && grid[x][y] != ' ') throw new ArgumentException("Invalid input key.");
+                    decryptedStr[j + coordinates.Length * i] = charGrid[x][y];
+                    var buf = x;
+                    x = grid.Length - 1 - y;
+                    y = buf;
+                }
+            }
 
-                    grid[x][y] = coordinate.Value;
+            return decryptedStr.Replace("~", "").ToString();
+        }
+
+        private static void EncryptMessage(char[][] grid, string text)
+        {
+            var coordinates = GetStartCoordinates(grid);
+
+            for (int j = 0; j < coordinates.Length; j++)
+            {
+                int x = coordinates[j].X;
+                int y = coordinates[j].Y;
+
+                for (int i = 0; i < 4; i++)
+                {
+                    var index = j + coordinates.Length * i;
+                    var a = text[index];
+                    grid[x][y] = a;
 
                     var buf = x;
                     x = grid.Length - 1 - y;
@@ -65,46 +132,22 @@ namespace Cryptography.RotatingGridEncryption
             }
         }
 
-        private static string Chipher(string text, char[][] grid, bool encrypt)
+        private static string Chipher(string text, char[][] grid)
         {
             if (text == null || grid == null) throw new ArgumentNullException();
 
-            FillCoordinates(grid);
-
-            if (text.Length < grid.Length * grid.First().Length && encrypt)
+            if (text.Length < grid.Length * grid.Length)
             {
-                text += new string('~', grid.Length * grid.First().Length - text.Length);
+                text += new string('~', grid.Length * grid.Length - text.Length);
             }
 
-            var strings = new string[text.Length / grid.Length];
-
-            Parallel.For(0, grid.Length, (i) =>
-            {
-                var blockSequence = text.Substring(i * grid.Length, grid.Length).ToCharArray();
-
-                if (encrypt)
-                {
-                    Array.Sort(grid[i], blockSequence);
-                }
-                else
-                {
-                    var sortingTemplate = Enumerable.Range(0, grid.Length).ToArray();
-                    Array.Sort(grid[i], sortingTemplate);
-                    Array.Sort(sortingTemplate, blockSequence);
-                }
-                strings[i] = new string(blockSequence);
-            });
+            EncryptMessage(grid, text);
 
             var result = new StringBuilder(text.Length);
 
-            foreach (var item in strings)
+            foreach (var item in grid)
             {
                 result.Append(item);
-            }
-
-            if (!encrypt)
-            {
-                result.Replace("~", "");
             }
 
             return result.ToString();
@@ -119,7 +162,13 @@ namespace Cryptography.RotatingGridEncryption
         /// <returns>Returns encrypted string according to <paramref name="keyGrid"/>.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
-        public static string Encrypt(string text, char[][] keyGrid) => Chipher(text, keyGrid, true);
+        public static (string encryptedStr, char[][] grid) Encrypt(string text)
+        {
+            if (text == null) throw new ArgumentNullException();
+            var grid = ChooseAppropriateGrid(text);
+            var gridCopy = ChooseAppropriateGrid(text);
+            return (Chipher(text, gridCopy), grid);
+        }
 
         /// <summary>
         /// RailFence decryption algorithm.<br/>
@@ -130,6 +179,21 @@ namespace Cryptography.RotatingGridEncryption
         /// <returns>Returns encrypted string according to <paramref name="keyGrid"/>.</returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
-        public static string Decrypt(string text, char[][] keyGrid) => Chipher(text, keyGrid, false);
+        public static string Decrypt(string text, char[][] keyGrid)
+        {
+            if (text == null) throw new ArgumentNullException();
+            return DecryptMessage(text, keyGrid);
+        }
+
+        public static void Demo()
+        {
+            var testText = Console.ReadLine();
+
+            var encrypted = Encrypt(testText);
+
+            Console.WriteLine(encrypted.encryptedStr);
+
+            Console.WriteLine(Decrypt(encrypted.encryptedStr, encrypted.grid));
+        }
     }
 }
