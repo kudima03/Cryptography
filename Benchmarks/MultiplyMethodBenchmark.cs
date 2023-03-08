@@ -15,13 +15,13 @@ namespace Benchmarks
         [Benchmark]
         public void TestMultiplyMethodEncrypt()
         {
-            MultiplyMethod.Encrypt("asdasdasdasdasdasdasdasdasdasdassdasdasadadasdasd");
+            MultiplyMethod.Encrypt(_largeText);
         }
 
         [Benchmark]
         public void TestMultiplyMethodDecrypt()
         {
-            MultiplyMethod.Decrypt("asdasdasdasdasdasdasdasdasdasdassdasdasadadasdasd", 371371);
+            MultiplyMethod.Decrypt(_largeText, 371371);
         }
     }
 }

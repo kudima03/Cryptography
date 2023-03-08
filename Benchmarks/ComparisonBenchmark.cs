@@ -3,6 +3,7 @@ using Cryptography.CaesarEncryption;
 using Cryptography.KeyPhraseEncryption;
 using Cryptography.MultiplyMethodEncryption;
 using Cryptography.RailFenceEncryption;
+using Cryptography.SimplifiedDES;
 
 namespace Benchmarks
 {
@@ -62,6 +63,18 @@ namespace Benchmarks
         public void RailFenceDecrypt()
         {
             RailFence.Decrypt(_largeText, 50);
+        }
+
+        [Benchmark]
+        public void SimplifiedDESEncrypt()
+        {
+            SimplifiedDES.Encrypt(_largeText, "1001010011");
+        }
+
+        [Benchmark]
+        public void SimplifiedDESDecrypt()
+        {
+            SimplifiedDES.Decrypt(_largeText, "1001010011");
         }
     }
 }
