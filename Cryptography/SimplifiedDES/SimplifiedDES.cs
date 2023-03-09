@@ -111,16 +111,20 @@ namespace Cryptography.SimplifiedDES
             }
         }
 
+
+        private static bool[] swapBufferArray = new bool[4];
         private static void Swap(BitArray bitArray)
         {
-            var boolArray = new bool[bitArray.Length];
-            bitArray.CopyTo(boolArray, 0);
-            bitArray = bitArray.LeftShift(bitArray.Length / 2);
-
-            var counter = boolArray.Length / 2;
-            for (int i = 0; i < bitArray.Length / 2; i++)
+            for (int i = 0; i < swapBufferArray.Length; i++)
             {
-                bitArray[i] = boolArray[counter++];
+                swapBufferArray[i] = bitArray[bitArray.Length / 2 + i];
+            }
+
+            bitArray.LeftShift(bitArray.Length / 2);
+
+            for (int i = 0; i < swapBufferArray.Length; i++)
+            {
+                bitArray[i] = swapBufferArray[i];
             }
         }
 
@@ -188,6 +192,20 @@ namespace Cryptography.SimplifiedDES
             return bitArray;
         }
 
+        private static BitArray bitArray = new(8);
+        private static BitArray ByteToBitArray(byte value)
+        {
+            for (int i = 0; i < bitArray.Length; i++)
+            {
+                if ((value & 1) != 0)
+                    bitArray[i] = true;
+                else
+                    bitArray[i] = false;
+                value >>= 1;
+            }
+            return bitArray;
+        }
+
         private static BitArray StringToBitArray(string str)
         {
             var bitKey = new BitArray(str.Length);
@@ -212,9 +230,10 @@ namespace Cryptography.SimplifiedDES
             return bitKey;
         }
 
+        private static BitArray bitBuf = new(2);
+        private static BitArray sequence = new(4);
         private static BitArray GetSequenceFromSBlocks(BitArray bitArray)
         {
-            var bitBuf = new BitArray(2);
             bitBuf[0] = bitArray[0];
             bitBuf[1] = bitArray[3];
 
@@ -225,8 +244,6 @@ namespace Cryptography.SimplifiedDES
             var column = BitArrayToInt32(bitBuf);
 
             var value = S_BLOCK1[row, column];
-
-            var sequence = new BitArray(4);
 
             sequence[0] = value[0];
             sequence[1] = value[1];
@@ -244,10 +261,10 @@ namespace Cryptography.SimplifiedDES
             return sequence;
         }
 
+        private static BitArray leftHalf = new(4);
+        private static BitArray rightHalf = new(4);
         private static void Round(BitArray input, BitArray key)
         {
-            var leftHalf = new BitArray(input.Count / 2);
-            var rightHalf = new BitArray(input.Count / 2);
             for (int i = 0; i < input.Count / 2; i++)
             {
                 leftHalf[i] = input[i];
@@ -276,7 +293,7 @@ namespace Cryptography.SimplifiedDES
 
             for (int i = 0; i < text.Length; i++)
             {
-                var bitArray = new BitArray(new byte[] { text[i] });
+                var bitArray = ByteToBitArray(text[i]);
                 Mix(ref bitArray, P8_TEXT_MIX_TEMPLATE);
                 Round(bitArray, encrypt ? keys.roundKey1 : keys.roundKey2);
                 Swap(bitArray);
@@ -284,7 +301,6 @@ namespace Cryptography.SimplifiedDES
                 Mix(ref bitArray, P8_TEXT_MIX_TEMPLATE_FINAL);
                 bitArray.CopyTo(text, i);
             }
-
             return text;
         }
 
@@ -299,7 +315,7 @@ namespace Cryptography.SimplifiedDES
         /// <exception cref="ArgumentException"></exception>
         public static string Encrypt(string text, string key)
         {
-            if (text == null ||  key == null) throw new ArgumentNullException("Argument can't be null");
+            if (text == null || key == null) throw new ArgumentNullException("Argument can't be null");
             if (key.Length != 10) throw new ArgumentException("Key length must be 10");
 
             var bitKey = StringToBitArray(key);

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Benchmarks
 {
+    [MemoryDiagnoser]
     public class SDesBenchmark
     {
         private readonly string _largeText;

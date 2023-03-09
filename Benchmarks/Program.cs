@@ -1,5 +1,6 @@
 ﻿using BenchmarkDotNet.Running;
 using Benchmarks;
+using Cryptography.SimplifiedDES;
 
 internal class Program
 {
@@ -8,7 +9,8 @@ internal class Program
         //BenchmarkRunner.Run<RailFenceBenchmark>();
         //BenchmarkRunner.Run<KeyPhraseBenchmark>();
         //BenchmarkRunner.Run<MultiplyMethodBenchmark>();
-        BenchmarkRunner.Run<ComparisonBenchmark>();
+        //BenchmarkRunner.Run<ComparisonBenchmark>();
         //BenchmarkRunner.Run<CaesarBenchmark>();
+        BenchmarkRunner.Run<SDesBenchmark>();
     }
 }
