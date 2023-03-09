@@ -273,8 +273,7 @@ namespace Cryptography.SimplifiedDES
         private static byte[] Chipher(byte[] text, BitArray key, bool encrypt)
         {
             var keys = GenerateRoundKeys(key);
-
-            for (int i = 0; i < text.Length; i++)
+            Parallel.For(0, text.Length, (i) =>
             {
                 var bitArray = new BitArray(new byte[] { text[i] });
                 Mix(ref bitArray, P8_TEXT_MIX_TEMPLATE);
@@ -283,8 +282,7 @@ namespace Cryptography.SimplifiedDES
                 Round(bitArray, encrypt ? keys.roundKey2 : keys.roundKey1);
                 Mix(ref bitArray, P8_TEXT_MIX_TEMPLATE_FINAL);
                 bitArray.CopyTo(text, i);
-            }
-
+            });
             return text;
         }
 
@@ -299,7 +297,7 @@ namespace Cryptography.SimplifiedDES
         /// <exception cref="ArgumentException"></exception>
         public static string Encrypt(string text, string key)
         {
-            if (text == null ||  key == null) throw new ArgumentNullException("Argument can't be null");
+            if (text == null || key == null) throw new ArgumentNullException("Argument can't be null");
             if (key.Length != 10) throw new ArgumentException("Key length must be 10");
 
             var bitKey = StringToBitArray(key);
