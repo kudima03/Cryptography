@@ -11,33 +11,27 @@ internal class Program
     private static void Main(string[] args)
     {
 
-        var hash = Cryptography.Hashes.FNV1A.Hash("BSUIR");
+        RailFence.Demo();
 
-        Console.WriteLine(hash);
+        Console.WriteLine();
+        Console.WriteLine();
 
-        var a = 4286365170;
+        KeyPhrase.Demo();
 
-        /*        RailFence.Demo();
+        Console.WriteLine();
+        Console.WriteLine();
 
-                Console.WriteLine();
-                Console.WriteLine();
+        RotatingGrid.Demo();
 
-                KeyPhrase.Demo();
+        Console.WriteLine();
+        Console.WriteLine();
 
-                Console.WriteLine();
-                Console.WriteLine();
+        Caesar.Demo();
 
-                RotatingGrid.Demo();
+        Console.WriteLine();
+        Console.WriteLine();
 
-                Console.WriteLine();
-                Console.WriteLine();
-
-                Caesar.Demo();
-
-                Console.WriteLine();
-                Console.WriteLine();
-
-                MultiplyMethod.Demo();*/
+        MultiplyMethod.Demo();
 
     }
 }
