@@ -5,13 +5,27 @@ using Cryptography.RailFenceEncryption;
 using Cryptography.RotatingGridEncryption;
 using Cryptography.SimplifiedDES;
 using System.Text;
+using Cryptography.RSA;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
+        var q = new[]
+        {
+            (char)6,
+            (char)4,
+            (char)10
+        };
 
-        RailFence.Demo();
+        var n = /*"123";*/ new string(q);
+
+        var a = RSA.Encrypt(n);
+        //Console.WriteLine(n);
+        var b = RSA.Decrypt(a.encryptedText, a.key, a.r);
+        Console.WriteLine(b == n);
+
+/*        RailFence.Demo();
 
         Console.WriteLine();
         Console.WriteLine();
@@ -31,7 +45,7 @@ internal class Program
         Console.WriteLine();
         Console.WriteLine();
 
-        MultiplyMethod.Demo();
+        MultiplyMethod.Demo();*/
 
     }
 }

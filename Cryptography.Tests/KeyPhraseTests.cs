@@ -1,39 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cryptography.KeyPhraseEncryption;
+﻿using Cryptography.KeyPhraseEncryption;
 
-namespace Cryptography.Tests
+namespace Cryptography.Tests;
+
+[TestClass]
+public class KeyPhraseTests
 {
-    [TestClass]
-    public class KeyPhraseTests
+    private readonly string _largeTextExample;
+
+    public KeyPhraseTests()
     {
-        private readonly string _largeTextExample;
-        public KeyPhraseTests()
-        {
-            _largeTextExample = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Text examples", "Text example.txt"));
-        }
+        _largeTextExample =
+            File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Text examples", "Text example.txt"));
+    }
 
-        [TestMethod]
-        public void TestEncryptDecryptEquals()
-        {
-            var keyPhrase = "qweqweqweqweqweqkjdfsdfsjdfksldbjfowierbfjihgidbfnkjewfdghifjjewipdbjfjiewoweqw";
-            var encryptedStr = KeyPhrase.Encrypt(_largeTextExample, keyPhrase);
-            Assert.AreEqual(KeyPhrase.Decrypt(encryptedStr, keyPhrase), _largeTextExample);
-        }
+    [TestMethod]
+    public void TestEncryptDecryptEquals()
+    {
+        var keyPhrase = "qweqweqweqweqweqkjdfsdfsjdfksldbjfowierbfjihgidbfnkjewfdghifjjewipdbjfjiewoweqw";
+        var encryptedStr = KeyPhrase.Encrypt(_largeTextExample, keyPhrase);
+        Assert.AreEqual(KeyPhrase.Decrypt(encryptedStr, keyPhrase), _largeTextExample);
+    }
 
-        [TestMethod]
-        public void TestEncryptNullStringParameter()
-        {
-            Assert.ThrowsException<ArgumentNullException>(() => KeyPhrase.Encrypt(null, null));
-        }
+    [TestMethod]
+    public void TestEncryptNullStringParameter()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() => KeyPhrase.Encrypt(null, null));
+    }
 
-        [TestMethod]
-        public void TestDecryptNullStringParameter()
-        {
-            Assert.ThrowsException<ArgumentNullException>(() => KeyPhrase.Decrypt(null, null));
-        }
+    [TestMethod]
+    public void TestDecryptNullStringParameter()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() => KeyPhrase.Decrypt(null, null));
     }
 }

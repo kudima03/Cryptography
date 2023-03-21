@@ -1,30 +1,30 @@
 ﻿using BenchmarkDotNet.Attributes;
 using Cryptography.RailFenceEncryption;
 
-namespace Benchmarks
+namespace Benchmarks;
+
+[MemoryDiagnoser]
+public class RailFenceBenchmark
 {
-    [MemoryDiagnoser]
-    public class RailFenceBenchmark
+    private readonly int _key;
+    private readonly string _largeText;
+
+    public RailFenceBenchmark()
     {
-        private readonly string _largeText;
+        _key = 2;
+        _largeText =
+            File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Text examples", "Text example.txt"));
+    }
 
-        private readonly int _key;
+    [Benchmark]
+    public void TestRailFenceEncrypt()
+    {
+        RailFence.Encrypt(_largeText, _key);
+    }
 
-        public RailFenceBenchmark()
-        {
-            _key = 2;
-            _largeText = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "Text examples", "Text example.txt"));
-        }
-        [Benchmark]
-        public void TestRailFenceEncrypt()
-        {
-            RailFence.Encrypt(_largeText, _key);
-        }
-
-        [Benchmark]
-        public void TestRailFenceDecrypt()
-        {
-            RailFence.Decrypt(_largeText, _key);
-        }
+    [Benchmark]
+    public void TestRailFenceDecrypt()
+    {
+        RailFence.Decrypt(_largeText, _key);
     }
 }

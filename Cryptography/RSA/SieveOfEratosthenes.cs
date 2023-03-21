@@ -1,36 +1,28 @@
 ﻿using System.Collections;
-using System.ComponentModel;
 
-namespace Cryptography.RSA
+namespace Cryptography.RSA;
+
+public class SieveOfEratosthenes
 {
-    public class SieveOfEratosthenes
+    private readonly BitArray Data;
+
+    public SieveOfEratosthenes(int length)
     {
-        private BitArray Data;
-        public int Length => Data.Length;
+        Data = new BitArray(length);
+        Data.SetAll(true);
 
-        public SieveOfEratosthenes(int length)
-        {
-            Data = new BitArray(length);
-            Data.SetAll(true);
+        for (var p = 2; p * p < length; p++)
+            if (Data[p])
+                for (var i = p * p; i < Length; i += p)
+                    Data[i] = false;
+    }
 
-            for (int p = 2; p * p < length; p++)
-            {
-                if (Data[p])
-                {
-                    for (int i = p * p; i < Length; i += p)
-                    {
-                        Data[i] = false;
-                    }
-                }
-            }
-        }
+    public int Length => Data.Length;
 
-        public void ListPrimes(Action<long> callback)
-        {
-            for (int i = 2; i < Length; i++)
-            {
-                if (Data[i]) callback.Invoke(i);
-            }
-        }
+    public void ListPrimes(Action<long> callback)
+    {
+        for (var i = 2; i < Length; i++)
+            if (Data[i])
+                callback.Invoke(i);
     }
 }

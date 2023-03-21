@@ -1,101 +1,89 @@
-﻿namespace Cryptography.MultiplyMethodEncryption
+﻿namespace Cryptography.MultiplyMethodEncryption;
+
+public class MultiplyMethodKeysGenerator
 {
-    public class MultiplyMethodKeysGenerator
+    private const string ENCRYPT_KEYS_FILE_NAME = "Encrypt keys.txt";
+    private const string DECRYPT_KEYS_FILE_NAME = "Decrypt keys.txt";
+
+    private static int GCD(int a, int b)
     {
-        private const string ENCRYPT_KEYS_FILE_NAME = "Encrypt keys.txt";
-        private const string DECRYPT_KEYS_FILE_NAME = "Decrypt keys.txt";
-
-        static private int GCD(int a, int b)
+        while (b != 0)
         {
-            while (b != 0)
-            {
-                var temp = b;
-                b = a % b;
-                a = temp;
-            }
-            return a;
+            var temp = b;
+            b = a % b;
+            a = temp;
         }
 
-        private static int[] GenerateEncryptKeys(int keysAmount, int symbolsAmount)
+        return a;
+    }
+
+    private static int[] GenerateEncryptKeys(int keysAmount, int symbolsAmount)
+    {
+        var keys = new int[keysAmount];
+
+        var foundKeys = 0;
+
+        var i = 0;
+
+        while (foundKeys != keysAmount)
         {
-            var keys = new int[keysAmount];
-
-            int foundKeys = 0;
-
-            int i = 0;
-
-            while (foundKeys != keysAmount)
-            {
-                if (GCD(symbolsAmount, i) == 1)
-                {
-                    keys[foundKeys++] = i;
-                }
-                i++;
-            }
-            return keys;
+            if (GCD(symbolsAmount, i) == 1) keys[foundKeys++] = i;
+            i++;
         }
 
-        private static int[] GenerateDecryptKeys(int[] encryptKeys, int symbolsAmount)
+        return keys;
+    }
+
+    private static int[] GenerateDecryptKeys(int[] encryptKeys, int symbolsAmount)
+    {
+        var decryptKeys = new int[encryptKeys.Length];
+
+        for (var i = 0; i < decryptKeys.Length; i++)
         {
-            var decryptKeys = new int[encryptKeys.Length];
+            var key = symbolsAmount / encryptKeys[i];
 
-            for (int i = 0; i < decryptKeys.Length; i++)
-            {
-                int key = symbolsAmount / encryptKeys[i];
-
-                while ((key * encryptKeys[i]) % symbolsAmount != 1)
-                {
-                    key++;
-                }
-                decryptKeys[i] = key;
-            }
-            return decryptKeys;
+            while (key * encryptKeys[i] % symbolsAmount != 1) key++;
+            decryptKeys[i] = key;
         }
 
-        public static void GenerateKeys(int symbolsAmount, int keysAmount)
+        return decryptKeys;
+    }
+
+    public static void GenerateKeys(int symbolsAmount, int keysAmount)
+    {
+        var encryptKeys = GenerateEncryptKeys(symbolsAmount, keysAmount);
+        var decryptKeys = GenerateDecryptKeys(encryptKeys, symbolsAmount);
+
+        using (var writer = new StreamWriter(File.OpenWrite(Path.Combine(Directory.GetCurrentDirectory(),
+                   "MultiplyMethodEncryption", ENCRYPT_KEYS_FILE_NAME))))
         {
-            var encryptKeys = GenerateEncryptKeys(symbolsAmount, keysAmount);
-            var decryptKeys = GenerateDecryptKeys(encryptKeys, symbolsAmount);
-
-            using (var writer = new StreamWriter(File.OpenWrite(Path.Combine(Directory.GetCurrentDirectory(), "MultiplyMethodEncryption", ENCRYPT_KEYS_FILE_NAME))))
-            {
-                foreach (var item in encryptKeys)
-                {
-                    writer.WriteLine(item);
-                }
-            }
-
-            using (var writer = new StreamWriter(File.OpenWrite(Path.Combine(Directory.GetCurrentDirectory(), "MultiplyMethodEncryption", DECRYPT_KEYS_FILE_NAME))))
-            {
-                foreach (var item in decryptKeys)
-                {
-                    writer.WriteLine(item);
-                }
-            }
+            foreach (var item in encryptKeys) writer.WriteLine(item);
         }
 
-        public static (int[] encryptKeys, int[] decryptKeys) GetStoredKeys()
+        using (var writer = new StreamWriter(File.OpenWrite(Path.Combine(Directory.GetCurrentDirectory(),
+                   "MultiplyMethodEncryption", DECRYPT_KEYS_FILE_NAME))))
         {
-            var encryptKeysList = new List<int>();
-            var decryptKeysList = new List<int>();
-
-            using (var reader = new StreamReader(File.OpenRead(Path.Combine(Directory.GetCurrentDirectory(), "MultiplyMethodEncryption", ENCRYPT_KEYS_FILE_NAME))))
-            {
-                while (!reader.EndOfStream)
-                {
-                    encryptKeysList.Add(int.Parse(reader.ReadLine()));
-                }
-            }
-
-            using (var reader = new StreamReader(File.OpenRead(Path.Combine(Directory.GetCurrentDirectory(), "MultiplyMethodEncryption", DECRYPT_KEYS_FILE_NAME))))
-            {
-                while (!reader.EndOfStream)
-                {
-                    decryptKeysList.Add(int.Parse(reader.ReadLine()));
-                }
-            }
-
-            return (encryptKeysList.ToArray(), decryptKeysList.ToArray());
+            foreach (var item in decryptKeys) writer.WriteLine(item);
         }
+    }
+
+    public static (int[] encryptKeys, int[] decryptKeys) GetStoredKeys()
+    {
+        var encryptKeysList = new List<int>();
+        var decryptKeysList = new List<int>();
+
+        using (var reader = new StreamReader(File.OpenRead(Path.Combine(Directory.GetCurrentDirectory(),
+                   "MultiplyMethodEncryption", ENCRYPT_KEYS_FILE_NAME))))
+        {
+            while (!reader.EndOfStream) encryptKeysList.Add(int.Parse(reader.ReadLine()));
+        }
+
+        using (var reader = new StreamReader(File.OpenRead(Path.Combine(Directory.GetCurrentDirectory(),
+                   "MultiplyMethodEncryption", DECRYPT_KEYS_FILE_NAME))))
+        {
+            while (!reader.EndOfStream) decryptKeysList.Add(int.Parse(reader.ReadLine()));
+        }
+
+        return (encryptKeysList.ToArray(), decryptKeysList.ToArray());
     }
 }
