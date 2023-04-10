@@ -15,7 +15,7 @@ namespace Benchmarks
     {
         private readonly string _largeText;
 
-        private (ulong[] message, ulong key, ulong r) data;
+        private (UInt128[] message, UInt128 key, UInt128 r) data;
 
         public RsaBenchmark()
         {
