@@ -19,27 +19,20 @@ public class RSA
     {
         var primes = new List<ulong>();
 
-        /*        new OptimizedSegmentedWheel235(500).ListPrimes(primes.Add);
+        if (!File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "Primes.txt")))
+        {
+            using (var writer = new StreamWriter(File.OpenWrite(Path.Combine(Directory.GetCurrentDirectory(), "Primes.txt"))))
+            {
+                new PrimesGenerator(300).Generate(writer);
+            }
+        }
 
-                primes = primes.Skip((int)(*//*0.99999 0.8 **//* primes.Count)).ToList();
-
-                using (var file = new StreamWriter(File.OpenWrite(Path.Combine(Directory.GetCurrentDirectory(), "Primes.txt"))))
-                {
-                    foreach (var item in primes)
-                    {
-                        file.WriteLine(item);
-                    }
-                }*/
-
-        using (var file = new StreamReader(File.OpenRead(Path.Combine(Directory.GetCurrentDirectory(), "RSA",
-                   "Primes.txt"))))
+        using (var file = new StreamReader(File.OpenRead(Path.Combine(Directory.GetCurrentDirectory(), "Primes.txt"))))
         {
             while (!file.EndOfStream) primes.Add(ulong.Parse(file.ReadLine()));
         }
 
-
         return primes.ToArray();
-        //return null;
     }
 
     //Extended Euclid algorithm:  x*a + y*b = d, where d = GCD(a, b)
@@ -99,43 +92,23 @@ public class RSA
     {
         var res = EuclidExtendedAlgorithhm(value, modulo);
         return res.gcd > 1 ? 0 : (ulong)(res.x % modulo + modulo) % modulo;
-
-        /*        var egcd = 
-
-                if (egcd.gcd != 1)
-                    throw new ArgumentException("Invalid modulo", nameof(modulo));
-
-                var result = egcd.x;
-
-                if (result < 0)
-                    result += modulo;
-
-                return result % modulo;*/
     }
 
     private static (ulong e, ulong d, ulong r) GetKeys()
     {
         var primes = GetRandomPrimes(ulong.MaxValue, 2);
 
-        Console.WriteLine("Primes: " + primes[0] + " " + primes[1]);
-
         var r = primes[0] * primes[1];
 
         //f(r)
         var eulerValue = EulerFunctionForCompositeNumber(primes[0], primes[1]);
-
-        Console.WriteLine("f(r): " + eulerValue);
 
         primes = GetRandomPrimes(eulerValue, 1);
 
         //e
         var e = primes[0];
 
-        Console.WriteLine("e: " + e);
-
         var d = ModInversion(e, eulerValue);
-
-        Console.WriteLine("d:" + d);
 
         return (e, d, r);
     }

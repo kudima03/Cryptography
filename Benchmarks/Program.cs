@@ -10,6 +10,7 @@ internal class Program
         //BenchmarkRunner.Run<MultiplyMethodBenchmark>();
         //BenchmarkRunner.Run<ComparisonBenchmark>();
         //BenchmarkRunner.Run<CaesarBenchmark>();
-        BenchmarkRunner.Run<FNV1ABenchmark>();
+        //BenchmarkRunner.Run<FNV1ABenchmark>();
+        BenchmarkRunner.Run<RsaBenchmark>();
     }
 }

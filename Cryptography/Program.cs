@@ -5,31 +5,20 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        var str = Console.ReadLine();
+        //File.ReadAllText("C:\\Users\\Dmitry\\source\\repos\\Cryptography\\Benchmarks\\Text examples\\Text example.txt")
+        
+        var str = new string('q', 100);
 
         var timer = new Stopwatch();
+
         timer.Start();
 
-        int success = 0;
+        var encrypted = RSA.Encrypt(str);
 
-        for (int i = 0; i < 100; i++)
-        {
-            var a = RSA.Encrypt(str);
+        var decrypted = RSA.Decrypt(encrypted.encryptedText, encrypted.key, encrypted.r);
 
-            var b = RSA.Decrypt(a.encryptedText, a.key, a.r);
-
-            /*            Console.WriteLine(b == str);
-                        Console.WriteLine( "===================================================");*/
-
-            if (b == str)
-            {
-                success++;
-            }
-            Console.Clear();
-            Console.WriteLine(i + 1 + "%");
-        }
         timer.Stop();
-        Console.WriteLine("Success: " + success + "%");
+
         Console.WriteLine(timer.ElapsedMilliseconds);
     }
 }
