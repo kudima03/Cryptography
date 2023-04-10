@@ -1,51 +1,35 @@
-﻿using Cryptography.CaesarEncryption;
-using Cryptography.KeyPhraseEncryption;
-using Cryptography.MultiplyMethodEncryption;
-using Cryptography.RailFenceEncryption;
-using Cryptography.RotatingGridEncryption;
-using Cryptography.SimplifiedDES;
-using System.Text;
-using Cryptography.RSA;
+﻿using Cryptography.RSA;
+using System.Diagnostics;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
-        var q = new[]
+        var str = Console.ReadLine();
+
+        var timer = new Stopwatch();
+        timer.Start();
+
+        int success = 0;
+
+        for (int i = 0; i < 100; i++)
         {
-            (char)6,
-            (char)4,
-            (char)10
-        };
+            var a = RSA.Encrypt(str);
 
-        var n = /*"123";*/ new string(q);
+            var b = RSA.Decrypt(a.encryptedText, a.key, a.r);
 
-        var a = RSA.Encrypt(n);
-        //Console.WriteLine(n);
-        var b = RSA.Decrypt(a.encryptedText, a.key, a.r);
-        Console.WriteLine(b == n);
+            /*            Console.WriteLine(b == str);
+                        Console.WriteLine( "===================================================");*/
 
-/*        RailFence.Demo();
-
-        Console.WriteLine();
-        Console.WriteLine();
-
-        KeyPhrase.Demo();
-
-        Console.WriteLine();
-        Console.WriteLine();
-
-        RotatingGrid.Demo();
-
-        Console.WriteLine();
-        Console.WriteLine();
-
-        Caesar.Demo();
-
-        Console.WriteLine();
-        Console.WriteLine();
-
-        MultiplyMethod.Demo();*/
-
+            if (b == str)
+            {
+                success++;
+            }
+            Console.Clear();
+            Console.WriteLine(i + 1 + "%");
+        }
+        timer.Stop();
+        Console.WriteLine("Success: " + success + "%");
+        Console.WriteLine(timer.ElapsedMilliseconds);
     }
 }
