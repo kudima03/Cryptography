@@ -18,6 +18,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="MultiplyMethodEncryption\Decrypt keys.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
